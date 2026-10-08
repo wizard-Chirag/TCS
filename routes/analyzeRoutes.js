@@ -1,8 +1,38 @@
 const express = require("express");
-const router = express.Router();
+const path = require("path");
+require("dotenv").config();
 
-const { analyzeResearchQuestion } = require("../controllers/analyzeController");
+const analyzeRoutes = require("./routes/analyzeRoutes");
 
-router.post("/", analyzeResearchQuestion);
+const app = express();
 
-module.exports = router;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+
+// Static files
+app.use(express.static(path.join(__dirname, "public")));
+
+
+// Home page
+app.get("/", (req, res) => {
+    res.render("index");
+});
+
+
+// Analysis API
+app.use("/analyze", analyzeRoutes);
+
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});

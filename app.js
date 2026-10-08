@@ -1,20 +1,42 @@
-const exp = require('express')
-const path = require('path')
-const app = exp()
-
-require('dotenv').config();
-
-app.use(exp.urlencoded({extended:true}))
-app.use(exp.json())
-
-app.get('/',(req,res)=>{
-    res.send("This is working!")
-})
-
-app.set('view engine','ejs')
+const express = require("express");
+const path = require("path");
+require("dotenv").config();
 
 const analyzeRoutes = require("./routes/analyzeRoutes");
+
+const app = express();
+
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+
+// Static files
+app.use(express.static(path.join(__dirname, "public")));
+
+
+// Home page
+app.get("/", (req, res) => {
+    res.render("index");
+});
+
+app.get("/results", (req, res) => {
+    res.render("results");
+});
+
+
+// Analysis API
 app.use("/analyze", analyzeRoutes);
-app.listen(3690,()=>{
-    console.log("Server is running on port 3000")
-})
+
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});

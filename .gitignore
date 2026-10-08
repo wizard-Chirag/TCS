@@ -3,8 +3,6 @@ node_modules/
 
 # Environment variables
 .env
-
-# Optional env variants
 .env.local
 .env.development.local
 .env.test.local
@@ -12,3 +10,7 @@ node_modules/
 
 # Uploads
 uploads/
+
+# Python
+__pycache__/
+*.pyc
