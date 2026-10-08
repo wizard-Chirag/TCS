@@ -11,8 +11,13 @@ node_modules/
 # Uploads
 uploads/
 
-# Python cache
+# Python cache & virtual environments
 __pycache__/
 *.py[cod]
 *.pyc
 *$py.class
+*.so
+.venv/
+env/
+venv/
+.pytest_cache/
