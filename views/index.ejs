@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medical Literature Summarizer</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Medical Literature Summarizer</h1>
+
+        <p class="description">
+            Enter a medical research question and analyze relevant
+            research papers from PubMed.
+        </p>
+
+
+        <form id="researchForm">
+
+            <label for="question">
+                Research Question
+            </label>
+
+            <textarea
+                id="question"
+                name="question"
+                placeholder="Example: Does exercise improve cardiovascular health?"
+                required
+            ></textarea>
+
+
+            <button
+                type="submit"
+                id="analyzeButton"
+            >
+                Analyze Literature
+            </button>
+
+        </form>
+
+
+        <div
+            id="loading"
+            class="loading hidden"
+        >
+            <p>Searching medical literature...</p>
+            <p>Extracting evidence and generating synthesis...</p>
+            <p>Please wait.</p>
+        </div>
+
+
+        <div
+            id="error"
+            class="error hidden"
+        ></div>
+
+    </div>
+
+
+    <script>
+
+        const form =
+            document.getElementById("researchForm");
+
+        const questionInput =
+            document.getElementById("question");
+
+        const loading =
+            document.getElementById("loading");
+
+        const errorBox =
+            document.getElementById("error");
+
+        const analyzeButton =
+            document.getElementById("analyzeButton");
+
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+
+            const question =
+                questionInput.value.trim();
+
+
+            // -----------------------------
+            // Validate question
+            // -----------------------------
+
+            if (!question) {
+
+                errorBox.textContent =
+                    "Please enter a research question.";
+
+                errorBox.classList.remove("hidden");
+
+                return;
+            }
+
+
+            // -----------------------------
+            // Show loading
+            // -----------------------------
+
+            loading.classList.remove("hidden");
+
+            errorBox.classList.add("hidden");
+
+            analyzeButton.disabled = true;
+
+            analyzeButton.textContent =
+                "Analyzing...";
+
+
+            try {
+
+                // -----------------------------
+                // Send request to backend
+                // -----------------------------
+
+                const response =
+                    await fetch("/analyze", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            question: question
+                        })
+
+                    });
+
+
+                const data =
+                    await response.json();
+
+
+                // -----------------------------
+                // Handle backend error
+                // -----------------------------
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Analysis failed."
+                    );
+
+                }
+
+
+                // -----------------------------
+                // Store result
+                // -----------------------------
+
+                sessionStorage.setItem(
+                    "analysisResult",
+                    JSON.stringify(data)
+                );
+
+
+                // -----------------------------
+                // Go to results page
+                // -----------------------------
+
+                window.location.href =
+                    "/results";
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                errorBox.textContent =
+                    error.message ||
+                    "Something went wrong.";
+
+                errorBox.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+            finally {
+
+                loading.classList.add(
+                    "hidden"
+                );
+
+                analyzeButton.disabled =
+                    false;
+
+                analyzeButton.textContent =
+                    "Analyze Literature";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

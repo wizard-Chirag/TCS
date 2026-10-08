@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Analysis Results</title>
+
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Literature Analysis Results
+        </h1>
+
+
+        <!-- ================================= -->
+        <!-- RESEARCH QUESTION -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Research Question
+            </h2>
+
+            <div
+                id="question"
+                class="answer"
+            ></div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- SYNTHESIS -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Overall Conclusion
+            </h2>
+
+            <div
+                id="answer"
+                class="answer"
+            >
+                Loading...
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- KEY FINDINGS -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Key Findings
+            </h2>
+
+            <ul id="keyFindings"></ul>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- OVERALL EVIDENCE -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Overall Evidence
+            </h2>
+
+            <div
+                id="overallEvidence"
+                class="answer"
+            ></div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- CONFIDENCE -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Confidence
+            </h2>
+
+            <div
+                id="confidence"
+                class="answer"
+            ></div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- LIMITATIONS -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Limitations
+            </h2>
+
+            <ul id="limitations"></ul>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- PAPERS -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Papers Analyzed
+            </h2>
+
+            <div id="papers"></div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- STRUCTURED EVIDENCE -->
+        <!-- ================================= -->
+
+        <section>
+
+            <h2>
+                Structured Evidence
+            </h2>
+
+            <div id="evidence"></div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- BACK BUTTON -->
+        <!-- ================================= -->
+
+        <a
+            href="/"
+            class="back"
+        >
+            ← Analyze Another Question
+        </a>
+
+    </div>
+
+
+
+    <script>
+
+        // =====================================
+        // Get stored result
+        // =====================================
+
+        const storedResult =
+            sessionStorage.getItem(
+                "analysisResult"
+            );
+
+
+        // If there is no result,
+        // return to home page
+
+        if (!storedResult) {
+
+            window.location.href = "/";
+
+        }
+
+
+        const data =
+            JSON.parse(storedResult);
+
+
+
+        // =====================================
+        // RESEARCH QUESTION
+        // =====================================
+
+        document.getElementById(
+            "question"
+        ).textContent =
+            data.question || "Not available";
+
+
+
+        // =====================================
+        // SYNTHESIS
+        // =====================================
+
+        const synthesis =
+            data.synthesis || {};
+
+
+
+        // Overall answer
+
+        document.getElementById(
+            "answer"
+        ).textContent =
+            synthesis.answer ||
+            "No synthesis available.";
+
+
+
+        // Overall evidence
+
+        document.getElementById(
+            "overallEvidence"
+        ).textContent =
+            synthesis.overall_evidence ||
+            "Not available";
+
+
+
+        // Confidence
+
+        document.getElementById(
+            "confidence"
+        ).textContent =
+            synthesis.confidence ||
+            "Not available";
+
+
+
+        // =====================================
+        // KEY FINDINGS
+        // =====================================
+
+        const findingsContainer =
+            document.getElementById(
+                "keyFindings"
+            );
+
+
+        const keyFindings =
+            synthesis.key_findings || [];
+
+
+        if (keyFindings.length === 0) {
+
+            const li =
+                document.createElement("li");
+
+            li.textContent =
+                "No key findings available.";
+
+            findingsContainer.appendChild(li);
+
+        }
+
+
+        keyFindings.forEach(
+            function (finding) {
+
+                const li =
+                    document.createElement("li");
+
+                li.textContent =
+                    finding;
+
+                findingsContainer.appendChild(
+                    li
+                );
+
+            }
+        );
+
+
+
+        // =====================================
+        // LIMITATIONS
+        // =====================================
+
+        const limitationsContainer =
+            document.getElementById(
+                "limitations"
+            );
+
+
+        const limitations =
+            synthesis.limitations || [];
+
+
+        if (limitations.length === 0) {
+
+            const li =
+                document.createElement("li");
+
+            li.textContent =
+                "No limitations provided.";
+
+            limitationsContainer.appendChild(
+                li
+            );
+
+        }
+
+
+        limitations.forEach(
+            function (limitation) {
+
+                const li =
+                    document.createElement("li");
+
+                li.textContent =
+                    limitation;
+
+                limitationsContainer.appendChild(
+                    li
+                );
+
+            }
+        );
+
+
+
+        // =====================================
+        // PAPERS
+        // =====================================
+
+        const papersContainer =
+            document.getElementById(
+                "papers"
+            );
+
+
+        const papers =
+            data.papers || [];
+
+
+        if (papers.length === 0) {
+
+            papersContainer.textContent =
+                "No papers found.";
+
+        }
+
+
+        papers.forEach(
+            function (paper) {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className =
+                    "paper";
+
+
+                const title =
+                    document.createElement(
+                        "h3"
+                    );
+
+                title.textContent =
+                    paper.title ||
+                    "Untitled paper";
+
+
+                const pmid =
+                    document.createElement(
+                        "p"
+                    );
+
+                pmid.innerHTML =
+                    "<strong>PMID:</strong> " +
+                    escapeHTML(
+                        paper.pmid
+                    );
+
+
+                const authors =
+                    document.createElement(
+                        "p"
+                    );
+
+                authors.innerHTML =
+                    "<strong>Authors:</strong> " +
+                    escapeHTML(
+                        (paper.authors || [])
+                            .join(", ")
+                    );
+
+
+                const date =
+                    document.createElement(
+                        "p"
+                    );
+
+                date.innerHTML =
+                    "<strong>Publication Date:</strong> " +
+                    escapeHTML(
+                        paper.date
+                    );
+
+
+                const abstract =
+                    document.createElement(
+                        "p"
+                    );
+
+                abstract.innerHTML =
+                    "<strong>Abstract:</strong><br>" +
+                    escapeHTML(
+                        paper.abstract
+                    );
+
+
+                div.appendChild(title);
+
+                div.appendChild(pmid);
+
+                div.appendChild(authors);
+
+                div.appendChild(date);
+
+                div.appendChild(abstract);
+
+
+                papersContainer.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+
+        // =====================================
+        // STRUCTURED EVIDENCE
+        // =====================================
+
+        const evidenceContainer =
+            document.getElementById(
+                "evidence"
+            );
+
+
+        const evidence =
+            data.evidence || [];
+
+
+        if (evidence.length === 0) {
+
+            evidenceContainer.textContent =
+                "No structured evidence available.";
+
+        }
+
+
+        evidence.forEach(
+            function (item) {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className =
+                    "evidence";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        PMID:
+                        ${escapeHTML(item.pmid)}
+                    </h3>
+
+                    <p>
+                        <strong>
+                            Population:
+                        </strong>
+                        ${escapeHTML(
+                            item.population
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Intervention:
+                        </strong>
+                        ${escapeHTML(
+                            item.intervention
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Comparison:
+                        </strong>
+                        ${escapeHTML(
+                            item.comparison
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Outcome:
+                        </strong>
+                        ${escapeHTML(
+                            item.outcome
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Key Finding:
+                        </strong>
+                        ${escapeHTML(
+                            item.key_finding
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Evidence Strength:
+                        </strong>
+                        ${escapeHTML(
+                            item.evidence_strength
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Limitations:
+                        </strong>
+                        ${escapeHTML(
+                            item.limitations
+                        )}
+                    </p>
+
+                `;
+
+
+                evidenceContainer.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+
+        // =====================================
+        // SECURITY
+        // =====================================
+
+        function escapeHTML(value) {
+
+            if (
+                value === undefined ||
+                value === null
+            ) {
+
+                return "";
+
+            }
+
+
+            return String(value)
+
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
