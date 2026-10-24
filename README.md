@@ -110,3 +110,18 @@ To run the automated test suite:
 ```bash
 python test_evidence_retrieval.py
 ```
+
+---
+
+### Future Improvements
+
+The following enhancements could improve the reliability and usability of the evidence retrieval module:
+
+* **Retry Mechanism:** Retry failed requests with exponential backoff to handle temporary network errors and rate limits.
+* **Abstract Availability Indicator:** Clearly distinguish papers with complete abstracts from papers whose abstracts are unavailable.
+* **Relevance Validation:** Verify that retrieved papers match the medical research question before including them in the results.
+* **Publication Date Filtering:** Allow users to retrieve studies published within a specified date range.
+* **Structured Logging:** Record retrieval failures, API errors, and timeout events to simplify debugging.
+* **Automated Test Coverage:** Add tests for missing API keys, empty search results, duplicate PMIDs, malformed API responses, and network timeouts.
+
+These improvements are intended to make evidence retrieval more reliable, transparent, and easier to maintain.
